@@ -11,7 +11,7 @@
 }
 
 .navbar-dark {
-	background: #43b380;
+	background: #14afde;
 }
 
 .navbar-nav .nav-item {
@@ -19,16 +19,16 @@
 }
 
 a {
-	color: #43b380;
+	color: #14afde;
 }
 
 a:hover {
-	color: #3ca173;
+	color: #14afde;
 }
 
 .btn-primary {
-	background-color: #43b380;
-	border-color: #43b380;
+	background-color: #14afde;
+	border-color: #14afde;
 }
 
 .btn-primary:hover,
@@ -36,8 +36,8 @@ a:hover {
 .btn-primary:active,
 .btn-primary.focus,
 .btn-primary:focus {
-	background-color: #3ca173;
-	border-color: #3ca173;
+	background-color: #14afde;
+	border-color: #14afde;
 }
 
 .chart#blockchainChart {
@@ -68,7 +68,7 @@ a:hover {
 }
 
 .bg-green {
-	background: #43b380;
+	background: #14afde;
 }
 
 .text-break {

@@ -8,35 +8,36 @@ $(document).ready(function () {
 
 	channel = decodeURIComponent(channel);
 	$.ajax({
-		url: `${channel}/api/v1/transaction/${hash}`,
+		url: `${channel}/api/v1/transactions/${hash}`,
 		dataType: "json",
 		type: "GET",
 		cache: "false",
 		success: function (tx) {
-			$("#Ktransaction").text(tx.hash);
-			$("#type").append(getTxTypeBadge(tx.type));
+			console.log(tx)
+			$("#Ktransaction").text(tx[0].hash);
+			$("#type").append(getTxTypeBadge(tx[0].type));
 			$("#previous").append(`
-        <a href="./transaction.html?channel=${channel}&hash=${tx.prev}">
-          <span class="transaction-hash" data-toggle="tooltip" title="${tx.prev}">
-            ${getColorizedHex(tx.prev)}
+        <a href="./transaction.html?channel=${channel}&hash=${tx[0].prev}">
+          <span class="transaction-hash" data-toggle="tooltip" title="${tx[0].prev}">
+            ${getColorizedHex(tx[0].prev)}
           </span>
         </a>
       `);
       $("#size").text(getTxSize(tx));
       $("#subg").append(`
         <a href="#">
-          <span class="transaction-hash" data-toggle="tooltip" title="${tx.subg}">
-            ${getColorizedHex(tx.subg)}
+          <span class="transaction-hash" data-toggle="tooltip" title="${tx[0].subg}">
+            ${getColorizedHex(tx[0].subg)}
           </span>
         </a>
       `);
-			$("#milestone").text(tx.mile);
+			$("#milestone").text(tx[0].mile);
 			$("#timestamp").text(
-				moment(tx.time / 1000000).format("D/M/YYYY HH:mm")
+				moment(tx[0].time / 1000000).format("D/M/YYYY HH:mm")
       );
-      $("#lead").text(tx.lead);
-			$("#epoch").text(tx.epoc);
-      $("#data").text(JSON.stringify(JSON.parse(tx.data), null, 4));
+      $("#lead").text(tx[0].lead);
+			$("#epoch").text(tx[0].epoc);
+      $("#data").text(JSON.stringify(JSON.parse(tx[0].data), null, 4));
 
       $("#theme-toggle").click(() => {
         refreshCodeHighlightStyle();
@@ -49,7 +50,7 @@ $(document).ready(function () {
       });
 		},
 		error: function () {
-			return (document.location.href = "./index.html");
+			// return (document.location.href = "./index.html");
 		},
 	});
 
@@ -78,7 +79,7 @@ function getTxTypeBadge(type) {
 }
 
 function getTxSize(tx) {
-  const size = new Blob([JSON.stringify(tx)], {type : 'application/json'}).size;
+  const size = new Blob([tx], {type : 'application/json'}).size;
 
   if (size < 1000)
     return `${size} bytes`;

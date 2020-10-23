@@ -1,11 +1,11 @@
 const channels = {
   icarus: {
     name: 'Icarus (Unstable)',
-    url: 'http://localhost:4203'
+    url: 'https://delfi.equilibria.network:4203'
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'http://localhost:4203'
+    url: 'https://delfi.equilibria.network:4203'
   }
 }
 

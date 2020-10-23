@@ -1,7 +1,7 @@
 // Select the button
 const btn = document.querySelector(".mode-toggle");
 // Select the theme preference from localStorage
-const currentTheme = localStorage.getItem("theme");
+const currentTheme = "dark";
 // If the current theme in localStorage is "dark"...
 if (currentTheme == "dark") {
 // ...then use the .dark-theme class

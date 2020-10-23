@@ -1,11 +1,11 @@
 const channels = {
   icarus: {
     name: 'Icarus (Unstable)',
-    url: 'https://icarus.turtamai.com'
+    url: 'http://localhost:4203'
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'https://daedalus.turtamai.com'
+    url: 'http://localhost:4203'
   }
 }
 
@@ -73,13 +73,13 @@ function fetchChannelStats(clear = false) {
     type: 'GET',
     cache: 'false',
     success: function (stats) {
-      $('#channelName').text(stats.channel_name);
-      $('#channelDescription').text(stats.channel_description);
-      $('#channelVersion').text(stats.version);
-      $('#channelContact').text(stats.channel_contact);
-      $('#channelPubKey').text(stats.pub_key_string);
-      $('#channelTxCount').text(stats.tx_objects_on_disk);
-      $('#channelUsersCount').text(stats.tx_graph_users);
+      $('#channelName').text("Delfi");
+      $('#channelDescription').text("Delfi Channel");
+      $('#channelVersion').text("1");
+      $('#channelContact').text("Contact@equilibria.network");
+      $('#channelPubKey').text("");
+      $('#channelTxCount').text("");
+      $('#channelUsersCount').text("");
     },
     error: function() {
       console.log('error fetching stats!');

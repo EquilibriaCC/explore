@@ -1,17 +1,17 @@
 const channels = {
   icarus: {
     name: 'Icarus (Unstable)',
-    url: 'https://delfi.equilibria.network:4203'
+    url: 'https://delfi.equilibria.network/api/'
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'https://delfi.equilibria.network:4203'
+    url: 'https://delfi.equilibria.network/api/'
   }
 }
 
 const config = {
-  txQuerySize: 200,
-  graphMaxSize: 350,
+  txQuerySize: 500,
+  graphMaxSize: 100000,
   txQueryInterval: 20000,
   fitScreenInterval: 4000
 }
@@ -67,12 +67,7 @@ function fetchChannelStats(clear = false) {
     clearChannelStats();
   }
 
-  $.ajax({
-    url: `${channel.url}/api/v1/stats`,
-    dataType: 'json',
-    type: 'GET',
-    cache: 'false',
-    success: function (stats) {
+  
       $('#channelName').text("Delfi");
       $('#channelDescription').text("Delfi Channel");
       $('#channelVersion').text("1");
@@ -80,12 +75,7 @@ function fetchChannelStats(clear = false) {
       $('#channelPubKey').text("");
       $('#channelTxCount').text("");
       $('#channelUsersCount').text("");
-    },
-    error: function() {
-      console.log('error fetching stats!');
-      clearChannelStats();
-    }
-  });
+    
 }
 
 function clearChannelStats() {
@@ -123,7 +113,7 @@ function fetchTransactions(clear = false) {
   }
 
   $.ajax({
-    url: `${channel.url}/api/v1/transactions/${config.txQuerySize}`,
+    url: `${channel.url}/transactions/100`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',
@@ -196,7 +186,9 @@ function initTransactionsTable() {
             case '2':
               badge = 'badge bg-purple';
               break;
-          }
+           case '3':
+		badge = 'badge bg-red'  
+	}
 
           data = `<span class="${badge}">${data}</span>`;
         }
@@ -275,7 +267,7 @@ function updateGraph(txs) {
   }
 
   while (items.length > 0) {
-    for(let i = items.length - 1; i >= 0; i--) {
+    for(let i = 0; i < items.length; i++) {
       const tx = items[i];
       const existingNode = graph.nodes.get(tx.hash);
 
@@ -284,33 +276,42 @@ function updateGraph(txs) {
         continue;
       }
 
-      if (!graphHistory.some(n => n.id === tx.subg)) {
-        graphHistory.push({ id: tx.subg, lead: true });
+   //   if (!graphHistory.some(n => n.id === tx.subg)) {
+ //       graphHistory.push({ id: tx.subg, lead: true });
 
-        graph.nodes.add({ id: tx.subg, color: '#43b380', shape: 'hexagon', size: 25 });
-        graph.edges.add({ from: 'root', to: tx.subg });
-      }
+       // graph.nodes.add({ id: tx.subg, color: '#43b380', shape: 'hexagon', size: 25 });
+       // graph.edges.add({ from: tx.prev, to: tx.prev });
+	//      }
 
       const parent = graphHistory.find(n => n.id === tx.prnt);
       const parentNodeId = parent ? parent.id : tx.subg;
 
-      addNode(tx, parentNodeId);
+      addNode(tx,tx.prev);
       return;
     }
   }
 }
 
-function addNode(tx, parentId = 'root') {
+function addNode(tx, parentId) {
   if (!tx) {
     // if no transaction is provided, we treat it as the root node of the graph
     graph.nodes.add({ id: 'root', color: '#43b380', shape: 'hexagon', size: 40 });
-    graphHistory.push({ id: 'root', lead: true });
+    //graphHistory.push({ id: 'root', lead: true });
 
     return;
   }
+  
+ var shape = ""
+ if (tx.type == "1") {
+	shape = "hexagon"
+	} else if (tx.type =="2") {
+	shape = "dot"
+	} else if (tx.type =="3") {
+	shape = "sqaure"
+	}
 
-  graph.nodes.add({ id: tx.hash, color: '#43b380' });
-  graphHistory.push({ id: tx.hash, lead: tx.lead });
+  graph.nodes.add({ id: tx.hash, shape: shape, group: tx.subg });
+  graphHistory.push({ id: tx.hash ,lead: tx.lead});
 
   const parentNode = graph.nodes.get(parentId);
 
@@ -363,25 +364,25 @@ function getTxDataText(data, hash) {
 function getGraphOptions() {
   return {
     interaction:{
-      dragNodes:false,
-      dragView: false,
+      dragNodes:true,
+      dragView: true,
       hideEdgesOnDrag: false,
       hideEdgesOnZoom: false,
       hideNodesOnDrag: false,
-      hover: false,
+      hover: true,
       hoverConnectedEdges: true,
       keyboard: {
-        enabled: false,
+        enabled: true,
         speed: {x: 10, y: 10, zoom: 0.02},
         bindToWindow: true
       },
-      multiselect: false,
+      multiselect: true,
       navigationButtons: false,
       selectable: true,
       selectConnectedEdges: true,
       tooltipDelay: 300,
       zoomSpeed: 1,
-      zoomView: false
+      zoomView: true
     },
     layout: {
       randomSeed: undefined,
@@ -394,10 +395,10 @@ function getGraphOptions() {
         treeSpacing: 200,
         blockShifting: true,
         edgeMinimization: true,
-        parentCentralization: true,
-        direction: 'UD',        // UD, DU, LR, RL
-        sortMethod: 'hubsize',  // hubsize, directed
-        shakeTowards: 'leaves'  // roots, leaves
+        parentCentralization: false,
+        direction: 'LR',        // UD, DU, LR, RL
+        sortMethod: 'directed',  // hubsize, directed
+        shakeTowards: 'roots'  // roots, leaves
       }
     },
     physics:{
@@ -442,8 +443,8 @@ function getGraphOptions() {
         enabled: true,
         iterations: 1000,
         updateInterval: 100,
-        onlyDynamicEdges: false,
-        fit: true
+        onlyDynamicEdges: true,
+        fit: false
       },
       timestep: 0.5,
       adaptiveTimestep: true,

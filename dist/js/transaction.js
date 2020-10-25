@@ -1,3 +1,4 @@
+let check = true
 $(document).ready(function () {
 	let channel = getQueryStringParam("channel");
 	const hash = getQueryStringParam("hash");
@@ -5,15 +6,16 @@ $(document).ready(function () {
 	if (!channel || !isHash(hash)) {
 		return (document.location.href = "./index.html");
 	}
-
 	channel = decodeURIComponent(channel);
 	$.ajax({
-		url: `${channel}/transactions/${hash}`,
+		url: `${channel}/api/v1/transactions/desc/${hash}`,
 		dataType: "json",
 		type: "GET",
 		cache: "false",
 		success: function (tx) {
-			console.log(tx)
+			if (tx[0].type == 3) {
+				check = false;
+			}
 			$("#Ktransaction").text(tx[0].hash);
 			$("#type").append(getTxTypeBadge(tx[0].type));
 			$("#previous").append(`
@@ -58,6 +60,20 @@ $(document).ready(function () {
 		selector: "[data-toggle=tooltip]",
 		boundary: "window",
 	});
+	async function checkCheck() {
+		let x = 0
+		while (true) {
+			await new Promise(r => setTimeout(r, 100));
+			if (x > 200) {
+				break
+			}
+			if (!check) {
+				return (document.location.href = "./contract.html?channel="+channel+"&hash="+hash)
+			}
+			x++
+		}
+	}
+	checkCheck()
 });
 
 function getTxTypeBadge(type) {

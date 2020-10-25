@@ -20,7 +20,6 @@ function getQueryStringParam (key) {
 function getColorizedHex(hex, includeRemainder = false) {
 	let result = '';
   let offset = 0;
-    console.log(hex)
 	while (offset <= hex.length - 6) {
 		result += getHexPixel(hex.substring(offset, offset + 6));
 		offset += 6;

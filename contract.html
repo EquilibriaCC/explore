@@ -1,50 +1,69 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Delfi Explorer</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin/>
     <meta name="msapplication-TileColor" content="#43b380"/>
     <meta name="theme-color" content="#43b380"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+    />
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="mobile-web-app-capable" content="yes"/>
     <meta name="HandheldFriendly" content="True"/>
     <meta name="MobileOptimized" content="320"/>
-    <link rel="shortcut icon" href="./dist/ico/XEQ_logo_blackbackground_rounded.ico.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="./dist/ico/XEQ_logo_blackbackground_rounded.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./dist/ico/XEQ_logo_blackbackground_rounded.png.png">
-    <link rel="manifest" href="./dist/ico/site.webmanifest">
-    <link rel="mask-icon" href="./dist/ico/safari-pinned-tab.svg" color="#43b380">
+    <link rel="shortcut icon" href="./dist/ico/favicon.ico"/>
+    <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./dist/ico/favicon-32x32.png"
+    />
+    <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="./dist/ico/favicon-16x16.png"
+    />
+    <link rel="manifest" href="./dist/ico/site.webmanifest"/>
+    <link
+            rel="mask-icon"
+            href="./dist/ico/safari-pinned-tab.svg"
+            color="#43b380"
+    />
     <link href="./dist/css/tabler.min.css" rel="stylesheet"/>
     <link href="./dist/css/style.css" rel="stylesheet"/>
+    <link id="light-code" rel="stylesheet" href="./dist/css/highlightjs/gradient-light.css">
+    <link id="dark-code" rel="stylesheet" href="./dist/css/highlightjs/gradient-dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <style>
         body {
             display: none;
-        }
-    </style>
-    <style type="text/css">
-        #graph-view {
-            height: 350px;
-            pointer-events: none;
         }
     </style>
 
     <!-- Demo - needs to be removed  -->
     <script src="./dist/js/third-party.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment.min.js"
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.28.0/moment.min.js"
             integrity="sha512-Q1f3TS3vSt1jQ8AwP2OuenztnLU6LwxgyyYOG1jgMW/cbEMHps/3wjvnl1P3WTrF3chJUWEoxDUEjMxDV8pujg=="
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
     <script src="./dist/js/common.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <script src="./dist/js/index.js"></script>
+    <script src="./dist/js/contract.js"></script>
 </head>
 
 <body class="antialiased">
+
 <div class="page">
     <header class="navbar navbar-expand-lg navbar-dark navbar-overlap">
         <div class="container-xl">
@@ -205,101 +224,159 @@
     </header>
     <div class="content">
         <div class="container-xl">
+            <canvas id="myChart" width="400" height="150"></canvas>
+            <script>
+                graph()
+            </script>
+        </div>
+    </div>
+    <div class="content">
+        <div class="container-xl">
             <!-- Page title -->
             <div class="page-header text-white">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <h2 class="page-title">
-                            Delfi Explorer
-                        </h2>
+                        <h2 class="page-title">Contract Details</h2>
                     </div>
                 </div>
             </div>
-            <div class="row row-deck row-cards">
 
-                <div class="col-sm-12 col-lg-4">
-                    <div class="card" id="stats">
-                        <div class="card-header">
-                            <h4 class="card-title">Channel Stats</h4>
+            <div class="row row-deck row-cards">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header text-break">
+                            <h4 class="card-title">
+                                <span id="Ktransaction"></span>
+                            </h4>
                         </div>
-                        <table class="table card-table table-vcenter">
+                        <table class="table card-table tx text-nowrap table-vcenter">
                             <tbody>
                             <tr>
-                                <th>Name</th>
-                                <td id="channelName"></td>
+                                <th>TX Type</th>
+                                <td id="type"></td>
+                                <th>Previous TX</th>
+                                <td id="previous"></td>
                             </tr>
                             <tr>
-                                <th>Description</th>
-                                <td id="channelDescription"></td>
+                                <th>Size</th>
+                                <td id="size"></td>
+                                <th>Subgraph</th>
+                                <td id="subg"></td>
                             </tr>
                             <tr>
-                                <th>Version</th>
-                                <td id="channelVersion"></td>
+                                <th>Date &amp; Time</th>
+                                <td id="timestamp"></td>
+                                <th>Epoch</th>
+                                <td id="epoch"></td>
                             </tr>
                             <tr>
-                                <th>Contact</th>
-                                <td id="channelContact"></td>
-                            </tr>
-                            <tr>
-                                <th>Public Key</th>
-                                <td id="channelPubKey"></td>
-                            </tr>
-                            <tr>
-                                <th>Transactions</th>
-                                <td id="channelTxCount"></td>
-                            </tr>
-                            <tr>
-                                <th>Registered Users</th>
-                                <td id="channelUsersCount"></td>
+                                <th>Milestone</th>
+                                <td id="milestone"></td>
+                                <th>Lead</th>
+                                <td id="lead"></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="container-xl">
+            <!-- Page title -->
+            <div class="page-header text-white">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h2 class="page-title">Contract Data</h2>
+                    </div>
+                </div>
+            </div>
 
-                <div class="col-sm-12 col-lg-8">
-                    <div class="row row-deck row-cards">
-
-                        <div class="col-12">
+            <div class="row row-deck row-cards">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="col-lg-12">
                             <div class="card">
-                                <div class="card-body" id="graph-view">
+                                <div class="card-header">
+                                    <h4 class="card-title">Data Txs</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id=transactionsContract class="table table-vcenter card-table">
+                                        <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Oracle Node Public Key</th>
+                                            <th>Data</th>
+                                            <th>Source</th>
+                                            <th>Task</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Transactions</h4>
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header text-white">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <h2 class="page-title">JSON</h2>
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table id=transactions class="table table-vcenter card-table">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Hash</th>
-                                <th>Public Key</th>
-                            </tr>
-                            </thead>
-                        </table>
+                </div>
+                <div class="row row-deck row-cards">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Data Txs</h4>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-vcenter card-table">
+                                            <thead>
+                                            <tr>
+                                                <pre><code><span id="data"></span></code></pre>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-deck row-cards">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="col-lg-12">
+                            </div>
+                            <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                    </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
         <footer class="footer footer-transparent">
             <div class="container">
-                <div class="row text-center align-items-center flex-row-reverse">
+                <div
+                        class="row text-center align-items-center flex-row-reverse"
+                >
                     <div class="col-lg-auto ml-lg-auto">
                         <ul class="list-inline list-inline-dots mb-0">
-                            <li class="list-inline-item"><a href="https://github.com/karai/explore" target="_blank"
-                                                            class="link-secondary">Source code</a></li>
+                            <li class="list-inline-item">
+                                <a
+                                        href="https://github.com/karai/explore"
+                                        target="_blank"
+                                        class="link-secondary"
+                                >Source code</a
+                                >
+                            </li>
                         </ul>
                     </div>
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
@@ -311,6 +388,7 @@
                 </div>
             </div>
         </footer>
+
     </div>
 </div>
 <!-- Libs JS -->
@@ -320,7 +398,7 @@
 <!-- Dark Mode -->
 <script src="./dist/js/dark-mode.js"></script>
 <script>
-    document.body.style.display = "block"
+    document.body.style.display = "block";
 </script>
 </body>
 </html>

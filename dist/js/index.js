@@ -1,11 +1,13 @@
 const channels = {
   icarus: {
     name: 'Icarus (Unstable)',
-    url: 'https://delfi.equilibria.network:4203'
+    // url: 'https://delfi.equilibria.network:4203'
+    url: 'http://localhost:4203'
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'https://delfi.equilibria.network:4203'
+    // url: 'https://delfi.equilibria.network:4203'
+    url: 'http://localhost:4203'
   }
 }
 
@@ -57,6 +59,19 @@ $(document).ready(function() {
       if (isHash(term)) {
         const chl = encodeURIComponent(channel.url);
         return document.location.href=`./transaction.html?channel=${chl}&hash=${term}`;
+      }
+    }
+  });
+  $('#searchContract').keydown(function (e) {
+    // setSearchValueErrorState(false);
+
+    // check if 'Enter' key was pressed
+    if (e.which === 13) {
+      const term = $('#searchContract').val();
+
+      if (isHash(term)) {
+        const chl = encodeURIComponent(channel.url);
+        return document.location.href=`./contract.html?channel=${chl}&hash=${term}`;
       }
     }
   });
@@ -123,7 +138,7 @@ function fetchTransactions(clear = false) {
   }
 
   $.ajax({
-    url: `${channel.url}/api/v1/transactions/${config.txQuerySize}`,
+    url: `${channel.url}/api/v1/transactions/desc/nondatatxs`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',
@@ -246,8 +261,7 @@ function updateTransactionsData(txs) {
   txs.forEach(tx => {
     if (!allTxs.some(t => t.hash === tx.hash)) {
       allTxs.push(tx);
-
-      transactionsTable.rows.add([[tx.time, tx.type, tx.hash, tx.data]]);
+      transactionsTable.rows.add([[tx.time, tx.type, tx.hash, tx]]);
       redrawTable = true;
 
       if (!txQueue.some(t => t.hash === tx.hash)) {
@@ -287,7 +301,7 @@ function updateGraph(txs) {
       if (!graphHistory.some(n => n.id === tx.subg)) {
         graphHistory.push({ id: tx.subg, lead: true });
 
-        graph.nodes.add({ id: tx.subg, color: '#43b380', shape: 'hexagon', size: 25 });
+        graph.nodes.add({ id: tx.subg, color: '#14afde', shape: 'hexagon', size: 25 });
         graph.edges.add({ from: 'root', to: tx.subg });
       }
 
@@ -344,20 +358,29 @@ function resetGraph() {
 function getTxDataText(data, hash) {
   let json;
   let text = 'TEXT';
-
   try {
-    json = JSON.parse(data);
+    json = JSON.parse(data.data);
   } catch (err) {
-    // console.log(err);
-    // console.log(data);
   }
 
   if (json && json instanceof Object) {
-    text = `JSON`;
+    text = `TX`;
+  }
+  try {
+    if (json.Asset) {
+      text = `CONTRACT`
+      hash = data.subg
+    }
+  } catch {
+    text = `TX`;
   }
 
   const chl = encodeURIComponent(channel.url);
-  return `<a href="./transaction.html?channel=${chl}&hash=${hash}"><span class="transaction-hash">${text}</span></a>`;
+  if (text === `CONTRACT`) {
+    return `<a href="./contract.html?channel=${chl}&hash=${hash}"><span class="transaction-hash">${text}</span></a>`;
+  } else {
+    return `<a href="./transaction.html?channel=${chl}&hash=${hash}"><span class="transaction-hash">${text}</span></a>`;
+  }
 }
 
 function getGraphOptions() {

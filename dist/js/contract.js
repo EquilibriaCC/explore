@@ -110,7 +110,7 @@ $(document).ready(function () {
 
 	channel = decodeURIComponent(channel);
 	$.ajax({
-		url: `${channel}/api/v1/transactions/contract/${hash}`,
+		url: `${channel}/transactions/contract/${hash}`,
 		dataType: "json",
 		type: "GET",
 		cache: "false",

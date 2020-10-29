@@ -1,11 +1,11 @@
 const channels = {
   icarus: {
     name: 'Icarus (Unstable)',
-    url: https://delfi.equilibria.network/api/'
+    url: https://delfi.equilibria.network/api'
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'https://delfi.equilibria.network/api/',
+    url: 'https://delfi.equilibria.network/api',
   }
 }
 
@@ -42,7 +42,21 @@ $(document).ready(function() {
 
   initChannelSelector();
   initTransactionsTable();
-
+  
+  $.ajax({
+    url: `${channel.url}/transactions/asc/all`,
+    dataType: 'json',
+    type: 'GET',
+    cache: 'false',
+    success: function (txs) {
+      updateTransactionsData(txs);
+    },
+    error: function() {
+      console.log('error fetching txs!');
+      transactionsTable.clear();
+      transactionsTable.draw(false);
+    }
+  });
   switchChannel(channels.icarus);
   startRefreshDataLoop(config.txQueryInterval);
   startUpdateGraphLoop();
@@ -126,7 +140,7 @@ function fetchTransactions(clear = false) {
   }
 
   $.ajax({
-    url: `${channel.url}/api/v1/transactions/desc/nondatatxs`,
+    url: `${channel.url}/transactions/desc/nondatatxs`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',

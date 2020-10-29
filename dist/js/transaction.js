@@ -8,7 +8,7 @@ $(document).ready(function () {
 	}
 	channel = decodeURIComponent(channel);
 	$.ajax({
-		url: `${channel}/api/v1/transactions/desc/${hash}`,
+		url: `${channel}/transactions/desc/${hash}`,
 		dataType: "json",
 		type: "GET",
 		cache: "false",

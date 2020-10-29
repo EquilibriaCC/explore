@@ -110,7 +110,7 @@ $(document).ready(function () {
 
 	channel = decodeURIComponent(channel);
 	$.ajax({
-		url: `${channel}/api/v1/transactions/contract/${hash}`,
+		url: `${channel}/transactions/contract/${hash}`,
 		dataType: "json",
 		type: "GET",
 		cache: "false",
@@ -122,6 +122,7 @@ $(document).ready(function () {
 			for (let i = 0; i < tx.length; i++) {
 				graphTitle = tx[0].data.Asset + "/" + tx[0].data.Denom
 				tx[i].data = JSON.parse(tx[i].data)
+				console.log(tx[i])
 				if (i !== 0) {
 					contractTable.rows.add([[tx[i].time, tx[i].data.PubKey, tx[i].data.Data, tx[i].data.Source, tx[i].data.Task]]);
 					contractTable.draw(true);

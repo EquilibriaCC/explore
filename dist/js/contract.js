@@ -117,7 +117,7 @@ $(document).ready(function () {
 		success: function (tx) {
 			// if (tx[0].type !== 3) {
 			// 	return (document.location.href = "./index.html")
-								graphTitle = JSON.parse(tx[0].data).Asset + "/" + JSON.parse(tx[0].data).Denom
+			graphTitle = JSON.parse(tx[0].data).Asset + "/" + JSON.parse(tx[0].data).Denom
 			// }
 			table(tx)
 			console.log(tx.length)
@@ -127,12 +127,12 @@ $(document).ready(function () {
 				console.log(tx[i])	
 				
 				if (i !== 0) {
-					
-					contractTable.rows.add([[tx[i].time, tx[i].data.pubkey, tx[i].data.data, tx[i].data.source, tx[i].data.task]]);
-					contractTable.draw(true);
+				//	contractTable.rows.add([[tx[i].time, tx[i].data.pubkey, tx[i].data.data, tx[i].data.source, tx[i].data.task]]);
+				//	contractTable.draw(true);
 				}
+
 				if (tx[i].type === "2") {
-					priceData.push(parseFloat(tx[i].data.data).toFixed(8))
+					priceData.push(tx[i].data.TrustedAnswer).toFixed(8)
 					let d = new Date(tx[i].time/1000000)
 					let tm = moment(tx[i].time/1000000).format("D/M/YYYY HH:mm");
 					timeData.push(tm)

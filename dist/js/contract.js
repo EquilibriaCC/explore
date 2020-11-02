@@ -110,30 +110,35 @@ $(document).ready(function () {
 
 	channel = decodeURIComponent(channel);
 	$.ajax({
-		url: `${channel}/api/v1/transactions/contract/${hash}`,
+		url: `${channel}/transactions/contract/${hash}`,
 		dataType: "json",
 		type: "GET",
 		cache: "false",
 		success: function (tx) {
 			// if (tx[0].type !== 3) {
 			// 	return (document.location.href = "./index.html")
+								graphTitle = JSON.parse(tx[0].data).Asset + "/" + JSON.parse(tx[0].data).Denom
 			// }
 			table(tx)
+			console.log(tx.length)
 			for (let i = 0; i < tx.length; i++) {
-				graphTitle = tx[0].data.Asset + "/" + tx[0].data.Denom
 				tx[i].data = JSON.parse(tx[i].data)
+				
+				console.log(tx[i])	
+				
 				if (i !== 0) {
-					contractTable.rows.add([[tx[i].time, tx[i].data.PubKey, tx[i].data.Data, tx[i].data.Source, tx[i].data.Task]]);
+					
+					contractTable.rows.add([[tx[i].time, tx[i].data.pubkey, tx[i].data.data, tx[i].data.source, tx[i].data.task]]);
 					contractTable.draw(true);
 				}
 				if (tx[i].type === "2") {
-					priceData.push(Number(tx[i].data.Data).toFixed(8))
+					priceData.push(parseFloat(tx[i].data.data).toFixed(8))
 					let d = new Date(tx[i].time/1000000)
 					let tm = moment(tx[i].time/1000000).format("D/M/YYYY HH:mm");
 					timeData.push(tm)
 				}
 			}
-			contractTable.draw(false);
+				
 			$("#Ktransaction").text(tx[0].hash);
 			$("#type").append(getTxTypeBadge(tx[0].type));
 			$("#previous").append(`

@@ -1,11 +1,11 @@
 const channels = {
   icarus: {
     name: 'Icarus (Unstable)',
-    url: https://delfi.equilibria.network/api/'
+    url: 'https://delfi.equilibria.network/api'
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'https://delfi.equilibria.network/api/',
+    url: 'https://delfi.equilibria.network/api',
   }
 }
 
@@ -45,7 +45,23 @@ $(document).ready(function() {
 
   switchChannel(channels.icarus);
   startRefreshDataLoop(config.txQueryInterval);
-  startUpdateGraphLoop();
+  
+
+  $.ajax({
+    url: `${channel.url}/api/v1/transactions/asc/nondatatxs`,
+    dataType: 'json',
+    type: 'GET',
+    cache: 'false',
+    success: function (txs) {
+      updateTransactionsData(txs);
+    },
+    error: function() {
+      console.log('error fetching txs!');
+      transactionsTable.clear();
+      transactionsTable.draw(false);
+    }
+  });
+	startUpdateGraphLoop();
 
   $('#searchValue').keydown(function (e) {
     // setSearchValueErrorState(false);
@@ -126,7 +142,7 @@ function fetchTransactions(clear = false) {
   }
 
   $.ajax({
-    url: `${channel.url}/api/v1/transactions/desc/nondatatxs`,
+    url: `${channel.url}/transactions/desc/nondatatxs`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',
@@ -288,17 +304,17 @@ function updateGraph(txs) {
         continue;
       }
 
-      if (!graphHistory.some(n => n.id === tx.subg)) {
-        graphHistory.push({ id: tx.subg, lead: true });
+     // if (!graphHistory.some(n => n.id === tx.subg)) {
+       // graphHistory.push({ id: tx.subg, lead: true });
 
-        graph.nodes.add({ id: tx.subg, color: '#14afde', shape: 'hexagon', size: 25 });
-        graph.edges.add({ from: 'root', to: tx.subg });
-      }
+       // graph.nodes.add({ id: tx.subg, color: '#14afde', shape: 'hexagon', size: 25 });
+       // graph.edges.add({ from: 'root', to: tx.subg });
+     // }
 
       const parent = graphHistory.find(n => n.id === tx.prnt);
       const parentNodeId = parent ? parent.id : tx.subg;
 
-      addNode(tx,tx.prev);
+      addNode(tx,parentNodeId);
       return;
     }
   }
@@ -314,21 +330,23 @@ function addNode(tx, parentId) {
   }
   
  var shape = ""
+var size_t = 50
  if (tx.type == "1") {
 	shape = "hexagon"
 	} else if (tx.type =="2") {
 	shape = "dot"
 	} else if (tx.type =="3") {
 	shape = "sqaure"
-	}
+	size_t  = 80
+		}
 
-  graph.nodes.add({ id: tx.hash, shape: shape, group: tx.subg });
+  graph.nodes.add({ id: tx.hash, shape: shape, group: tx.subg, size: size_t });
   graphHistory.push({ id: tx.hash ,lead: tx.lead});
 
   const parentNode = graph.nodes.get(parentId);
 
   if (parentNode) {
-    graph.edges.add({ from: parentId, to: tx.hash });
+    graph.edges.add({ from: tx.hash, to: tx.prev });
   }
 
   const index = txQueue.findIndex(t => t.hash === tx.hash);

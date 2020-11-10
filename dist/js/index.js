@@ -43,6 +43,10 @@ $(document).ready(function() {
   initChannelSelector();
   initTransactionsTable();
   
+
+  switchChannel(channels.icarus);
+  startRefreshDataLoop(config.txQueryInterval);
+  
   $.ajax({
     url: `${channel.url}/transactions/asc/all`,
     dataType: 'json',
@@ -57,9 +61,6 @@ $(document).ready(function() {
       transactionsTable.draw(false);
     }
   });
-  switchChannel(channels.icarus);
-  startRefreshDataLoop(config.txQueryInterval);
-  
 
   $.ajax({
     url: `${channel.url}/api/v1/transactions/asc/nondatatxs`,

@@ -63,7 +63,7 @@ $(document).ready(function() {
   });
 
   $.ajax({
-    url: `${channel.url}/api/v1/transactions/asc/nondatatxs`,
+    url: `${channel.url}/api/v1/transactions/asc/all`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',
@@ -157,7 +157,7 @@ function fetchTransactions(clear = false) {
   }
 
   $.ajax({
-    url: `${channel.url}/transactions/desc/nondatatxs`,
+    url: `${channel.url}/transactions/desc/all`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',

@@ -120,7 +120,6 @@ $(document).ready(function () {
 			graphTitle = JSON.parse(tx[0].data).Asset + "/" + JSON.parse(tx[0].data).Denom
 			// }
 			table(tx)
-			console.log(tx.length)
 			for (let i = 0; i < tx.length; i++) {
 				tx[i].data = JSON.parse(tx[i].data)
 				

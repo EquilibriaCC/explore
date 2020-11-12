@@ -43,7 +43,6 @@ $(document).ready(function() {
   initChannelSelector();
   initTransactionsTable();
   
-
   switchChannel(channels.icarus);
   startRefreshDataLoop(config.txQueryInterval);
   
@@ -282,8 +281,10 @@ function updateTransactionsData(txs) {
   txs.forEach(tx => {
     if (!allTxs.some(t => t.hash === tx.hash)) {
       allTxs.push(tx);
-      transactionsTable.rows.add([[tx.time, tx.type, tx.hash, tx]]);
-      redrawTable = true;
+      if (tx.type == "3" || tx.type == "2") {
+        transactionsTable.rows.add([[tx.time, tx.type, tx.hash, tx]]);
+        redrawTable = true;
+      }
 
       if (!txQueue.some(t => t.hash === tx.hash)) {
         txQueue.push(tx);

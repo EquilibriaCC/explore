@@ -5,7 +5,7 @@ const channels = {
   },
   daedalus: {
     name: 'Daedalus (Stable)',
-    url: 'https://delfi.equilibria.network/api'
+    url: 'https://delfi.equilibria.network/api',
   }
 }
 
@@ -42,10 +42,41 @@ $(document).ready(function() {
 
   initChannelSelector();
   initTransactionsTable();
+  
 
   switchChannel(channels.icarus);
   startRefreshDataLoop(config.txQueryInterval);
-  startUpdateGraphLoop();
+  
+  $.ajax({
+    url: `${channel.url}/transactions/asc/all`,
+    dataType: 'json',
+    type: 'GET',
+    cache: 'false',
+    success: function (txs) {
+      updateTransactionsData(txs);
+    },
+    error: function() {
+      console.log('error fetching txs!');
+      transactionsTable.clear();
+      transactionsTable.draw(false);
+    }
+  });
+
+  $.ajax({
+    url: `${channel.url}/api/v1/transactions/asc/all`,
+    dataType: 'json',
+    type: 'GET',
+    cache: 'false',
+    success: function (txs) {
+      updateTransactionsData(txs);
+    },
+    error: function() {
+      console.log('error fetching txs!');
+      transactionsTable.clear();
+      transactionsTable.draw(false);
+    }
+  });
+	startUpdateGraphLoop();
 
   $('#searchValue').keydown(function (e) {
     // setSearchValueErrorState(false);
@@ -80,12 +111,7 @@ function fetchChannelStats(clear = false) {
     clearChannelStats();
   }
 
-  $.ajax({
-    url: `${channel.url}/api/v1/stats`,
-    dataType: 'json',
-    type: 'GET',
-    cache: 'false',
-    success: function (stats) {
+  
       $('#channelName').text("Delfi");
       $('#channelDescription').text("Delfi Channel");
       $('#channelVersion').text("1");
@@ -93,12 +119,7 @@ function fetchChannelStats(clear = false) {
       $('#channelPubKey').text("");
       $('#channelTxCount').text("");
       $('#channelUsersCount').text("");
-    },
-    error: function() {
-      console.log('error fetching stats!');
-      clearChannelStats();
-    }
-  });
+    
 }
 
 function clearChannelStats() {
@@ -136,7 +157,7 @@ function fetchTransactions(clear = false) {
   }
 
   $.ajax({
-    url: `${channel.url}/transactions/desc/nondatatxs`,
+    url: `${channel.url}/transactions/desc/all`,
     dataType: 'json',
     type: 'GET',
     cache: 'false',
@@ -209,9 +230,9 @@ function initTransactionsTable() {
             case '2':
               badge = 'badge bg-purple';
               break;
-            case '3':
-              badge = 'badge bg-red'
-          }
+           case '3':
+		badge = 'badge bg-red'  
+	}
 
           data = `<span class="${badge}">${data}</span>`;
         }
@@ -261,8 +282,10 @@ function updateTransactionsData(txs) {
   txs.forEach(tx => {
     if (!allTxs.some(t => t.hash === tx.hash)) {
       allTxs.push(tx);
-      transactionsTable.rows.add([[tx.time, tx.type, tx.hash, tx]]);
-      redrawTable = true;
+      if (tx.type == "3" || tx.type == "2") {
+        transactionsTable.rows.add([[tx.time, tx.type, tx.hash, tx]]);
+        redrawTable = true;
+      }
 
       if (!txQueue.some(t => t.hash === tx.hash)) {
         txQueue.push(tx);
@@ -298,38 +321,49 @@ function updateGraph(txs) {
         continue;
       }
 
-      if (!graphHistory.some(n => n.id === tx.subg)) {
-        graphHistory.push({ id: tx.subg, lead: true });
+     // if (!graphHistory.some(n => n.id === tx.subg)) {
+       // graphHistory.push({ id: tx.subg, lead: true });
 
-        graph.nodes.add({ id: tx.subg, color: '#14afde', shape: 'hexagon', size: 25 });
-        graph.edges.add({ from: 'root', to: tx.subg });
-      }
+       // graph.nodes.add({ id: tx.subg, color: '#14afde', shape: 'hexagon', size: 25 });
+       // graph.edges.add({ from: 'root', to: tx.subg });
+     // }
 
       const parent = graphHistory.find(n => n.id === tx.prnt);
       const parentNodeId = parent ? parent.id : tx.subg;
 
-      addNode(tx, tx.prev);
+      addNode(tx,parentNodeId);
       return;
     }
   }
 }
 
-function addNode(tx, parentId = 'root') {
+function addNode(tx, parentId) {
   if (!tx) {
     // if no transaction is provided, we treat it as the root node of the graph
     graph.nodes.add({ id: 'root', color: '#43b380', shape: 'hexagon', size: 40 });
-    graphHistory.push({ id: 'root', lead: true });
+    //graphHistory.push({ id: 'root', lead: true });
 
     return;
   }
+  
+ var shape = ""
+var size_t = 50
+ if (tx.type == "1") {
+	shape = "hexagon"
+	} else if (tx.type =="2") {
+	shape = "dot"
+	} else if (tx.type =="3") {
+	shape = "sqaure"
+	size_t  = 80
+		}
 
-  graph.nodes.add({ id: tx.hash, color: '#43b380' });
-  graphHistory.push({ id: tx.hash, lead: tx.lead });
+  graph.nodes.add({ id: tx.hash, shape: shape, group: tx.subg, size: size_t });
+  graphHistory.push({ id: tx.hash ,lead: tx.lead});
 
   const parentNode = graph.nodes.get(parentId);
 
   if (parentNode) {
-    graph.edges.add({ from: parentId, to: tx.hash });
+    graph.edges.add({ from: tx.hash, to: tx.prev });
   }
 
   const index = txQueue.findIndex(t => t.hash === tx.hash);
@@ -386,25 +420,25 @@ function getTxDataText(data, hash) {
 function getGraphOptions() {
   return {
     interaction:{
-      dragNodes:false,
-      dragView: false,
+      dragNodes:true,
+      dragView: true,
       hideEdgesOnDrag: false,
       hideEdgesOnZoom: false,
       hideNodesOnDrag: false,
-      hover: false,
+      hover: true,
       hoverConnectedEdges: true,
       keyboard: {
-        enabled: false,
+        enabled: true,
         speed: {x: 10, y: 10, zoom: 0.02},
         bindToWindow: true
       },
-      multiselect: false,
+      multiselect: true,
       navigationButtons: false,
       selectable: true,
       selectConnectedEdges: true,
       tooltipDelay: 300,
       zoomSpeed: 1,
-      zoomView: false
+      zoomView: true
     },
     layout: {
       randomSeed: undefined,
@@ -417,10 +451,10 @@ function getGraphOptions() {
         treeSpacing: 200,
         blockShifting: true,
         edgeMinimization: true,
-        parentCentralization: true,
-        direction: 'UD',        // UD, DU, LR, RL
-        sortMethod: 'hubsize',  // hubsize, directed
-        shakeTowards: 'leaves'  // roots, leaves
+        parentCentralization: false,
+        direction: 'LR',        // UD, DU, LR, RL
+        sortMethod: 'directed',  // hubsize, directed
+        shakeTowards: 'roots'  // roots, leaves
       }
     },
     physics:{
@@ -465,8 +499,8 @@ function getGraphOptions() {
         enabled: true,
         iterations: 1000,
         updateInterval: 100,
-        onlyDynamicEdges: false,
-        fit: true
+        onlyDynamicEdges: true,
+        fit: false
       },
       timestep: 0.5,
       adaptiveTimestep: true,

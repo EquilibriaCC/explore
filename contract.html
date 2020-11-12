@@ -230,102 +230,67 @@
             </script>
         </div>
     </div>
-    <div class="container-xl">
-        <!-- Page title -->
-        <div class="page-header text-white">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <h2 class="page-title">Contract Details</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="row row-deck row-cards">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header text-break">
-                        <h4 class="card-title">
-                            <span id="Ktransaction"></span>
-                        </h4>
-                    </div>
-                    <table class="table card-table tx text-nowrap table-vcenter">
-                        <tbody>
-                        <tr>
-                            <th>TX Type</th>
-                            <td id="type"></td>
-                            <th>Previous TX</th>
-                            <td id="previous"></td>
-                        </tr>
-                        <tr>
-                            <th>Size</th>
-                            <td id="size"></td>
-                            <th>Subgraph</th>
-                            <td id="subg"></td>
-                        </tr>
-                        <tr>
-                            <th>Date &amp; Time</th>
-                            <td id="timestamp"></td>
-                            <th>Epoch</th>
-                            <td id="epoch"></td>
-                        </tr>
-                        <tr>
-                            <th>Milestone</th>
-                            <td id="milestone"></td>
-                            <th>Lead</th>
-                            <td id="lead"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-xl">
-        <!-- Page title -->
-<!--        <div class="page-header text-white">-->
-<!--            <div class="row align-items-center">-->
-<!--                <div class="col-auto">-->
-<!--                    <h2 class="page-title">Contract Data</h2>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="row row-deck row-cards">-->
-<!--            <div class="col-lg-12">-->
-<!--                <div class="card">-->
-<!--                    <div class="col-lg-12">-->
-<!--                        <div class="card">-->
-<!--                            <div class="card-header">-->
-<!--                                <h4 class="card-title">Data Txs</h4>-->
-<!--                            </div>-->
-<!--                            <div class="table-responsive">-->
-<!--                                <table id=transactionsContract class="table table-vcenter card-table">-->
-<!--                                    <thead>-->
-<!--                                    <tr>-->
-<!--                                        <th>Date</th>-->
-<!--                                        <th>Oracle Node Public Key</th>-->
-<!--                                        <th>Data</th>-->
-<!--                                        <th>Source</th>-->
-<!--                                        <th>Task</th>-->
-<!--                                    </tr>-->
-<!--                                    </thead>-->
-<!--                                </table>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
+    <div class="content">
         <div class="container-xl">
             <!-- Page title -->
             <div class="page-header text-white">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <h2 class="page-title">JSON</h2>
+                        <h2 class="page-title">Contract Details</h2>
                     </div>
                 </div>
             </div>
+
+            <div class="row row-deck row-cards">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header text-break">
+                            <h4 class="card-title">
+                                <span id="Ktransaction"></span>
+                            </h4>
+                        </div>
+                        <table class="table card-table tx text-nowrap table-vcenter">
+                            <tbody>
+                            <tr>
+                                <th>TX Type</th>
+                                <td id="type"></td>
+                                <th>Previous TX</th>
+                                <td id="previous"></td>
+                            </tr>
+                            <tr>
+                                <th>Size</th>
+                                <td id="size"></td>
+                                <th>Subgraph</th>
+                                <td id="subg"></td>
+                            </tr>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <td id="timestamp"></td>
+                                <th>Epoch</th>
+                                <td id="epoch"></td>
+                            </tr>
+                            <tr>
+                                <th>Milestone</th>
+                                <td id="milestone"></td>
+                                <th>Lead</th>
+                                <td id="lead"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-xl">
+            <!-- Page title -->
+            <div class="page-header text-white">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h2 class="page-title">Contract Data</h2>
+                    </div>
+                </div>
+            </div>
+
             <div class="row row-deck row-cards">
                 <div class="col-lg-12">
                     <div class="card">
@@ -335,10 +300,14 @@
                                     <h4 class="card-title">Data Txs</h4>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-vcenter card-table">
+                                    <table id=transactionsContract class="table table-vcenter card-table">
                                         <thead>
                                         <tr>
-                                            <pre><code><span id="data"></span></code></pre>
+                                            <th>Date</th>
+                                            <th>Oracle Node Public Key</th>
+                                            <th>Data</th>
+                                            <th>Source</th>
+                                            <th>Task</th>
                                         </tr>
                                         </thead>
                                     </table>
@@ -348,19 +317,51 @@
                     </div>
                 </div>
             </div>
-            <div class="row row-deck row-cards">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="col-lg-12">
+
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header text-white">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <h2 class="page-title">JSON</h2>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-vcenter card-table">
-                            </table>
+                    </div>
+                </div>
+                <div class="row row-deck row-cards">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Data Txs</h4>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-vcenter card-table">
+                                            <thead>
+                                            <tr>
+                                                <pre><code><span id="data"></span></code></pre>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-deck row-cards">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="col-lg-12">
+                            </div>
+                            <div class="table-responsive">
+                                    <table class="table table-vcenter card-table">
+                                    </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <footer class="footer footer-transparent">
             <div class="container">
                 <div
@@ -389,7 +390,8 @@
         </footer>
 
     </div>
-    <!-- Libs JS -->
+</div>
+<!-- Libs JS -->
 <script src="./dist/js/bootstrap.bundle.min.js"></script>
 <!-- Tabler Core -->
 <script src="./dist/js/tabler.min.js"></script>

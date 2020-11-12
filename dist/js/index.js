@@ -43,7 +43,6 @@ $(document).ready(function() {
   initChannelSelector();
   initTransactionsTable();
   
-
   switchChannel(channels.icarus);
   startRefreshDataLoop(config.txQueryInterval);
   

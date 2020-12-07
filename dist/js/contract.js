@@ -23,15 +23,18 @@ async function graph() {
 				borderColor: [
 					'#14afde',
 				],
-				borderWidth: 1
+				borderWidth: 1				
 			}]
 		},
 		options: {
 			title: {
 				display: true,
 				text: graphTitle + " Price Data",
-				fontSize: 22,
+				fontSize: 22,				
 			},
+			fill: true,
+			cubicInterpolationMode: "monotone",
+
 		}
 	});
 }

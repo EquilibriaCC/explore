@@ -1,0 +1,145 @@
+.navbar-overlap:after {
+	content: '';
+	height: 9rem;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: inherit;
+	z-index: -1;
+	box-shadow: inherit;
+}
+
+.navbar-dark {
+	background: #14afde;
+}
+
+.navbar-nav .nav-item {
+	white-space: nowrap;
+}
+
+a {
+	color: #14afde;
+}
+
+a:hover {
+	color: #14afde;
+}
+
+.btn-primary {
+	background-color: #14afde;
+	border-color: #14afde;
+}
+
+.btn-primary:hover,
+.btn-primary.active,
+.btn-primary:active,
+.btn-primary.focus,
+.btn-primary:focus {
+	background-color: #14afde;
+	border-color: #14afde;
+}
+
+.chart#blockchainChart {
+	min-height: 330px;
+}
+
+.chart#supply {
+	min-height: 650px;
+}
+
+.table th {
+	font-weight: 600;
+	color: #354052;
+}
+
+@media (min-width: 64rem) {
+	.w-150 {
+		width: 150px;
+	}
+}
+
+.form-control.is-danger {
+	border-color: #cd201f;
+}
+
+.form-control.is-success {
+	border-color: #5eba00;
+}
+
+.bg-green {
+	background: #14afde;
+}
+
+.text-break {
+	display: block !important;
+}
+
+.theme-dark .navbar-overlap:after {
+	content: none;
+}
+
+.theme-dark table th {
+	color: #f5f7fb;
+}
+
+#stats table td {
+	word-break: break-word;
+}
+
+.transaction-hash {
+  word-break: break-word;
+}
+
+.transaction-hash,
+#Ktransaction {
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.vis-network:focus {
+  outline: none;
+}
+
+span.transaction-hash {
+   display: flex;
+   max-width: 95%;
+}
+
+span.transaction-hash span {
+   width: 100%;
+}
+
+span.transaction-hash span:first-child {
+   border-radius: 2px 0 0 2px;
+}
+
+span.transaction-hash span:last-child {
+   border-radius: 0 2px 2px 0;
+}
+
+pre {
+   margin-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+   table.tx tr {
+    display: grid;
+    grid-template-columns: auto auto;
+    text-align: right;
+   }
+   table.tx th {
+      text-align: left;
+   }
+   table.tx tr td, 
+   table.tx tr th {
+    padding: 1.25rem;
+   }
+   table.tx tr:last-child td, 
+   table.tx tr:last-child th {
+      border-bottom: 1px solid rgba(110,117,130,.2);
+   }
+   span.transaction-hash {
+      max-width: 100%;
+   }
+}

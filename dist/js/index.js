@@ -38,7 +38,7 @@ $(document).ready(function() {
 
   const graphView = document.getElementById("graph-view");
   network = new vis.Network(graphView, graph, getGraphOptions());
-  addNode();
+  //addNode();
 
   initChannelSelector();
   initTransactionsTable();
@@ -330,7 +330,7 @@ function updateGraph(txs) {
       const parent = graphHistory.find(n => n.id === tx.prnt);
       const parentNodeId = parent ? parent.id : tx.subg;
 
-      addNode(tx,parentNodeId);
+     // addNode(tx,parentNodeId);
       return;
     }
   }
@@ -385,7 +385,7 @@ function resetGraph() {
   graphHistory = [];
   txQueue = [];
 
-  addNode();
+  //addNode();
 }
 
 function getTxDataText(data, hash) {
